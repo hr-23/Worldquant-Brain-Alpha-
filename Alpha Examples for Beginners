@@ -1,0 +1,202 @@
+Alpha Examples for Beginners
+Volatility arbitrage
+Hypothesis
+
+If the ratio of a stock’s implied volatility from a 120-day call option to 120 day Parkinson volatility is higher compared to other stocks, the stock price would increase. (Note that implied volatility looks 120 days in the future, while Parkinsons volatility looks at 120 days in the past)
+
+Implementation
+
+Long the stock if its implied volatility significantly exceeds its historical volatility and short the opposite
+
+Hint to improve the Alpha
+
+Can using transformational operators on the expression improve performance?
+
+1
+implied_volatility_call_120/parkinson_volatility_120
+
+Simulation Settings
+
+Region	Universe	Language	Decay	Delay	Truncation	Neutralization	Pasteurization	NaN Handling	Unit Handling
+USA	TOP1000	Fast Expression	0	0	0.08	Subindustry	On	Off	Verify
+Momentum after news
+Hypothesis
+
+After news is released, if a stock takes a longer time to rise, it may show strong evidence of upward momentum, and it could be beneficial to take a long position in it.
+
+Implementation
+
+Use the data field 'nws12_prez_4l' to capture this hypothesis. Backfill it with two years of data to ensure there is no drop in coverage
+
+Hint to improve the Alpha
+
+Can increasing weight on more liquid stocks (Stocks with high volume) help pass the sub-universe test?
+
+1
+ts_backfill(vec_avg(nws12_prez_4l),504)
+
+Simulation Settings
+
+Region	Universe	Language	Decay	Delay	Truncation	Neutralization	Pasteurization	NaN Handling	Unit Handling
+USA	TOP500	Fast Expression	0	1	0.08	Industry	On	Off	Verify
+EBIT vs CAPEX
+Hypothesis
+
+Stocks with higher EBIT compared to CapEx can be a sign of the company not investing much in growth and the stock may not grow as much, thus we should sell those stocks.
+
+Implementation
+
+CapEx (capital expenditure) is money spent on acquiring/maintaining fixed assets. Compare CapEx with EBIT, which is a company's net income before interest and taxes, and short stocks with inadequate CapEx.
+
+Hint to improve the Alpha
+
+Can different neutralization settings improve the alpha performance?
+
+1
+-rank(ebit/capex)
+
+Simulation Settings
+
+Region	Universe	Language	Decay	Delay	Truncation	Neutralization	Pasteurization	NaN Handling	Unit Handling
+USA	TOP3000	Fast Expression	0	1	0.01	Sector	On	Off	Verify
+Future Investment and Dividend
+Hypothesis
+
+Retained Earnings is a measure of a firm's net income that it has accrued over time and saved after the distribution of dividend. So Retained Earnings are an indicator of the capability of future investment and dividend.
+
+Implementation
+
+Use sharesout to normalize the amount of retained earnings; then apply ts_delta() operator to capture the change of the ratio over the last three months (one quarter). Finally use rank() operator to normalize the result.
+
+Hint to improve the Alpha
+
+Think about how many trading days in one quarter. Maybe there are less than 90 trading days in three months.
+
+1
+rank(ts_delta(retained_earnings / sharesout, 90))
+
+Simulation Settings
+
+Region	Universe	Language	Decay	Delay	Truncation	Neutralization	Pasteurization	NaN Handling	Unit Handling
+CHN	TOP3000	Fast Expression	5	1	0.01	Subindustry	On	Off	Verify
+Room for growth
+Hypothesis
+
+Companies with high asset fair value but comparatively lower EBIT are likely companies that have invested for growth over the past years and have more room for growth in the future
+
+Implementation
+
+Rank domestic and foreign EBIT separately with grouping by industry, because different industries may have different splits between domestic and foreign EBIT. Set lower alpha signal for companies with lower asset fair value.
+
+Hint to improve the Alpha
+
+Can the alpha work well if comparing among companies that are already more sizeable (TOP500), because companies that are too small may consider this metric as too risky as it is a sign of lower cashflows.
+
+123
+alpha = -group_rank(fnd2_ebitdm, industry)-group_rank(fnd2_ebitfr, industry);group_rank(fn_assets_fair_val_a,industry)>0.5?alpha*2 : alpha
+
+Simulation Settings
+
+Region	Universe	Language	Decay	Delay	Truncation	Neutralization	Pasteurization	NaN Handling	Unit Handling
+USA	TOP3000	Fast Expression	0	1	0.01	Subindustry	On	Off	Verify
+Pay back the debt
+Hypothesis
+
+It is usually safer to go long on companies that can easily pay back the short term debt using high liquid assets.
+
+Implementation
+
+Zscore of the ratio between cash and short term debt is calculated with higher readings refer to higher ratio when compared with the market.
+
+Hint to improve the Alpha
+
+Try comparing a stock with its peers instead of the whole market.
+
+1
+zscore(cash_st/debt_st)
+
+Simulation Settings
+
+Region	Universe	Language	Decay	Delay	Truncation	Neutralization	Pasteurization	NaN Handling	Unit Handling
+USA	TOP500	Fast Expression	0	1	0.01	Subindustry	On	Off	Verify
+Retained earnings
+Hypothesis
+
+Retained earnings are the cumulative net earnings of a company after dividend payments to the shareholders. In certain situations, shareholders might want to receive their dividends and realize their profit. Thus, some shareholders might not be happy with excessive retained earnings.
+
+Implementation
+
+We should long the stock that has its retained earnings decreasing and vice-versa.
+
+Hint to improve the Alpha
+
+Can different neutralization setting improve the alpha performance?
+
+1
+-ts_rank(retained_earnings,250)
+
+Simulation Settings
+
+Region	Universe	Language	Decay	Delay	Truncation	Neutralization	Pasteurization	NaN Handling	Unit Handling
+USA	TOP3000	Fast Expression	10	1	0.01	Sector	On	Off	Verify
+Pretax Income
+Hypothesis
+
+Pretax income is a good measure of a company's financial health and profitability. Companies with increasing pretax income may have good growth prospects and higher potential for increasing stock price. Thus, we would long stocks with increasing pretax income and short stocks with decreasing pretax income.
+
+Implementation
+
+Use the time-series rank operator to compare the trend of pretax income over the past 2 years, and use the quantile operator to normalize the result.
+
+Hints to Implement
+
+Boost the signal with sales data. For example, if the company has higher sales, it is more likely to outperform.
+
+1
+quantile(ts_rank(pretax_income,250))
+
+Simulation Settings
+
+Region	Universe	Language	Decay	Delay	Truncation	Neutralization	Pasteurization	NaN Handling	Unit Handling
+CHN	TOP3000	Fast Expression	4	1	0.01	Market	On	Off	Verify
+Operating Earnings Yield
+Hypothesis
+
+If the operating income of a company is currently higher than its past 1 year history, buy the company’s stock and vice-versa.
+
+Implementation
+
+Using ts_rank to identify current performance of the company compared to its own history
+
+Hints to Implement
+
+Rather than comparing the value directly, can calculating a ratio that includes stock market moves, improve the signal?
+
+1
+ts_rank(operating_income,252)
+
+Simulation Settings
+
+Region	Universe	Language	Decay	Delay	Truncation	Neutralization	Pasteurization	NaN Handling	Unit Handling
+USA	TOP3000	Fast Expression	0	1	0.08	Subindustry	On	Off	Verify
+Appreciation of liabilities
+Hypothesis
+
+An increase in the fair value of liabilities could indicate a higher cost than expected. This may deteriorate the company's financial health, potentially leading to lower profitability or financial distress.
+
+Implementation
+
+Go long when there is an increase in the fair value of liabilities within a year and short when the opposite occurs.
+
+Hints to Implement
+
+Could observing the increase over a shorter period improve accuracy?
+
+1
+-ts_rank(fn_liab_fair_val_l1_a,252)
+
+Simulation Settings
+
+Region	Universe	Language	Decay	Delay	Truncation	Neutralization	Pasteurization	NaN Handling	Unit Handling
+USA	TOP3000	Fast Expression	0	1	0.08	Subindustry	On	Off	Verify
+Prev: How to view your Alphas?
