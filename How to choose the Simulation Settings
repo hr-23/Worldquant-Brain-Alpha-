@@ -1,0 +1,46 @@
+How to choose the Simulation Settings
+The settings panel can be found by clicking the Settings button at the top right hand corner of the Simulate page. You can specify parameters like language, instrument type, universe, delay, neutralization, etc., which will be applied to your next simulation after clicking the "Apply" button.
+
+Language
+Fast Expression is available on BRAIN platform. To learn more, refer to Available Operators
+
+Instrument type
+Only Equity instrument type can be used at the moment
+
+Region and Universe
+The only region currently available to all BRAIN platform users is the US market. The regions Europe and Asia are currently available only to our research consultants.
+
+Universe is a set of trading instruments prepared by BRAIN platform. For example, "US: TOP3000" represents the top 3000 most liquid stocks in the US market (determined by highest average daily dollar volume traded).
+
+Delay
+Delay refers to the availability of data, relative to decision time. In other words, delay is the assumption of when we can trade stock once we decide on a position.
+
+Assume that you are looking at the data today before market close and you decide that you want to buy stock. We can choose an aggressive approach and trade stock in the time left till market close. In this case, the position is based on data available on the same day (today). This is called Delay 0 simulation.
+
+Alternatively, we could choose a conservative trading strategy and trade stock the next day(tomorrow). Then the position is achieved tomorrow and it is based on today’s data. In this case, there is a lag of 1 day. This is called Delay 1 simulation. In expression language, delay is applied automatically and you do not have to bother about it.
+
+Decay
+This performs a linear decay function over the past n days by combining today’s value with previous days’ decayed value. It performs the following function:
+
+ 
+Legal values for Decay: Integer 'n' where n >= 0. NOTE: Using negative or non-integer values for Decay will break simulations.
+
+Tip: Decay can be used to reduce turnover, but decay values that are too large will attenuate the signal.
+
+Truncation
+The maximum weight for each stock in the overall portfolio. When it is set to 0, there is no restriction.
+
+Legal values for Truncation: Float 'x' where 0 <= x <= 1 (NOTE: Any values for Truncation outside this range can impact/break simulations.)
+
+Tip: Truncation aims to guard from being too exposed to movements in individual stocks. The recommended setting is between 0.05 and 0.1 (entailing 5-10%).
+
+Neutralization
+Neutralization is an operation used to make our strategy market/industry/sub-industry neutral. When Neutralization = “Market” it does the following operation:
+
+Alpha = Alpha – mean(Alpha)
+
+where Alpha is the vector of weights.
+
+Basically, it makes the mean of the Alpha vector zero. Thus no net position is taken with respect to the market. In other words, the long exposure cancels out the short exposure completely, making our strategy market neutral.
+
+When Neutralization = Industry or Subindustry, all the instruments in the Alpha vector are grouped into smaller buckets corresponding to industry or sub-industry and neutralization is applied separately to each of the buckets. For illustration of industry/subindustry classification, see GICS (note: this is not necessarily the same classification standard used by BRAIN platform).
