@@ -1,0 +1,40 @@
+How to view your Alphas?
+The "Alphas" page shows a summary of the Alphas simulated so far. The controls available on this page are:
+
+Stage: The Alphas are grouped based on the stage - Unsubmitted and Submitted.
+Favorite: Alphas can be marked as favorite by clicking the
+Star
+The same procedure on favorite Alphas allows to unfavorite an Alpha.
+
+Hidden: Alphas can be hidden by selecting their checkbox and clicking the
+eye
+button. Clicking it again will un-hide the Alpha.
+
+Columns, Filters and Sorting: Columns can be added or removed in the Alphas page from 4 categories – Summary, Settings, Performance, Properties
+Filters can be used to view a subset of all Alphas. The parameters by which you can filter are: Name, Category, Code, Language, Color, Date Created, Decay, Drawdown, Favorite, Fitness, Hidden, Margin, Neutralization, PnL, Region, Returns, Sharpe, Status, Tags, Truncation, Turnover and Universe. [Note: Margin is the PnL divided by dollars traded. It is the same as the “Profit per $ traded” column on the results page. The unit bpm stands for basis points (margin), where each basis point represents 1/100th of 1% margin. I.e. 500 bpm would represent 5% margin.]
+
+Fields to be sorted and the order of sorting can be chosen in this pop-up or by clicking on the column header to cycle between increasing and decreasing order of sorting. The number of Alphas to be displayed per page can also be adjusted in this section.
+
+View Code / Simulation: Click the
+CodePreview
+icon to view the code for an expression. You can then click Alpha name to open Alpha information in separate block, and use "Clone Alpha" button to open this Alpha in simulation window.
+
+Alpha Lists: To compare the performance of two or more Alphas, first add the Alphas to the list by selecting the Alphas and clicking the
+list icon
+Distribution of Active Alphas
+This page visually represents the distribution of your submitted Alphas across three key dimensions: Region, Delay, and Data Category. This graphical visualization is divided into three layers, each representing one of these dimensions. The number displayed on each segment, visible upon hovering your mouse over it, indicates the number of Alphas in that subset and their proportion within the larger set.
+
+Here's how to navigate this feature:
+
+The initial layer represents the Region. Click on any segment within this layer to delve deeper.
+Upon selecting a region, you'll move to the second layer representing Delay. Here, you can choose between the available options.
+Clicking on a delay segment will lead you to the third layer, which shows the Data Category distribution for your submitted Alphas, specific to the chosen Region and Delay.
+This feature not only provides an overview of your submitted Alphas but also guides you in diversifying your research. Here's how:
+
+- Avoid submitting more than 50% of your Alphas in a single region.
+
+- Try to submit at least 5% of your Alphas with Delay-0.
+
+- Avoid submitting more than 30% of your Alphas in any single intersection of Region, Delay, and Data Category.
+
+This feature provides a color-coded visual cue to highlight the concentration of Alphas in a specific intersection of Region, Delay, and Data Category. The color gradient ranges from blue to red, with red indicating high concentration.
